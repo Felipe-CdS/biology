@@ -2,19 +2,7 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"os"
 )
-
-func readEntryFromFile(filename string) string {
-	data, err := os.ReadFile(filename)
-
-	if err != nil {
-		log.Fatalln("Error reading file.")
-	}
-
-	return string(data)
-}
 
 func searchAllSubstrings(dna string, s string) []int {
 
@@ -39,43 +27,48 @@ func searchAllSubstrings(dna string, s string) []int {
 	return positions
 }
 
-func searchAllSubsequences(dna string, s string) []int {
+func searchSubsequence(dna string, s string, idxDna int, idxS int, idxs []int, solutions *[][]int) {
 
-	positions := []int{}
+	if idxS >= len(s) {
+		*solutions = append(*solutions, idxs)
+		return
+	}
 
-	searchNextInSubseq(dna, s, positions)
-	fmt.Println(positions)
-	return positions
-}
+	if idxDna >= len(dna) {
+		return
+	}
 
-func searchNextInSubseq(dna string, s string, p []int) {
-	for i := 0; i < len(dna); i++ {
-		if string(dna[i]) == string(s[0]) {
-			p = append(p, i)
-			searchNextInSubseq(dna[i:], s[1:], p)
+	charS := string(s[idxS])
+
+	for i := idxDna; i < len(dna); i++ {
+
+		charDna := string(dna[idxDna])
+
+		if charS == charDna {
+			idxs = append(idxs, i)
+			searchSubsequence(dna, s, i+1, idxS+1, idxs, solutions)
 		}
 	}
 }
 
 func main() {
 	entry := readEntryFromFile("entry.txt")
-	substrings := []string{"TTGACA", "TATATT", "CGCGCGCGCG"}
-	var substrPos []int
+	subsequencesEntry := readEntryFromFile("entry2.txt")
 
+	substrings := []string{"TTGACA", "TATATT", "CGCGCGCGCG"}
 	subsequences := []string{"TTGACATATATT", "CGCGCGCGCG", "ATCCAGAATTCTCGGA"}
-	var subseqPos [][]int
 
 	/* Substrings Search */
 	for _, s := range substrings {
 		fmt.Printf(">Searching substring %s...\n", s)
-		substrPos = searchAllSubstrings(entry, s)
+		found := searchAllSubstrings(entry, s)
 
-		if len(substrPos) == 0 {
+		if len(found) == 0 {
 			fmt.Printf(">No \"%s\" found.\n\n", s)
 			continue
 		}
 
-		for _, pos := range substrPos {
+		for _, pos := range found {
 			fmt.Printf(">\"%s\" in position [%d].\n",
 				entry[pos:(pos+len(s))],
 				pos)
@@ -88,13 +81,16 @@ func main() {
 	/* Subsequences Search */
 	for _, s := range subsequences {
 		fmt.Printf(">Searching subsequence %s...\n", s)
+		solutions := [][]int{}
 
-		subseqPos = append(subseqPos, searchAllSubsequences(entry, s))
+		searchSubsequence(subsequencesEntry, s, 0, 0, []int{}, &solutions)
 
-		for _, s := range subseqPos {
-			for _, p := range s {
-				fmt.Println(p)
-			}
+		fmt.Printf(">\"%s\" subsequence found in positions:\n", s)
+
+		for _, x := range solutions {
+			fmt.Println(x)
 		}
+
+		fmt.Println()
 	}
 }
