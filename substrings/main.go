@@ -27,26 +27,26 @@ func searchAllSubstrings(dna string, s string) []int {
 	return positions
 }
 
-func searchSubsequence(dna string, s string, idxDna int, idxS int, idxs []int, solutions *[][]int) {
+func searchSubsequence(dna string, needle string, dnaIdx int, needleIdx int, idxs []int, solutions *[][]int) {
 
-	if idxS >= len(s) {
+	if needleIdx == len(needle) {
 		*solutions = append(*solutions, idxs)
 		return
 	}
 
-	if idxDna >= len(dna) {
+	if dnaIdx == len(dna) {
 		return
 	}
 
-	charS := string(s[idxS])
+	charNeedle := string(needle[needleIdx])
 
-	for i := idxDna; i < len(dna); i++ {
+	for i := dnaIdx; i < len(dna); i++ {
 
-		charDna := string(dna[idxDna])
+		charDna := string(dna[i])
 
-		if charS == charDna {
-			idxs = append(idxs, i)
-			searchSubsequence(dna, s, i+1, idxS+1, idxs, solutions)
+		if charNeedle == charDna {
+			idxs[needleIdx] = i
+			searchSubsequence(dna, needle, i+1, needleIdx+1, idxs, solutions)
 		}
 	}
 }
@@ -60,16 +60,16 @@ func main() {
 
 	/* Substrings Search */
 	for _, s := range substrings {
-		fmt.Printf(">Searching substring %s...\n", s)
+		fmt.Printf(">Procurando substring %s...\n", s)
 		found := searchAllSubstrings(entry, s)
 
 		if len(found) == 0 {
-			fmt.Printf(">No \"%s\" found.\n\n", s)
+			fmt.Printf(">Nenhuma instância de \"%s\" encontrada.\n\n", s)
 			continue
 		}
 
 		for _, pos := range found {
-			fmt.Printf(">\"%s\" in position [%d].\n",
+			fmt.Printf(">\"%s\" encontrada na posição [%d].\n",
 				entry[pos:(pos+len(s))],
 				pos)
 		}
@@ -80,16 +80,15 @@ func main() {
 
 	/* Subsequences Search */
 	for _, s := range subsequences {
-		fmt.Printf(">Searching subsequence %s...\n", s)
+		fmt.Printf(">Procurando subsequência %s...\n", s)
 		solutions := [][]int{}
 
-		searchSubsequence(subsequencesEntry, s, 0, 0, []int{}, &solutions)
-
-		fmt.Printf(">\"%s\" subsequence found in positions:\n", s)
-
-		for _, x := range solutions {
-			fmt.Println(x)
-		}
+		searchSubsequence(subsequencesEntry, s, 0, 0, make([]int, len(s)), &solutions)
+		fmt.Printf(">A subsequência \"%s\" foi encontrada em %d posições distintas.\n", s, len(solutions))
+		fmt.Println(solutions[0])
+		fmt.Println(solutions[10])
+		fmt.Printf(">A listagem de todas as posições pode ser encontrada no arquivo output_%s.txt.\n", s)
+		writeOutputOnFile(fmt.Sprintf("output_%s.txt", s), solutions)
 
 		fmt.Println()
 	}
