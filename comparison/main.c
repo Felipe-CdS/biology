@@ -14,9 +14,6 @@ void semiglobalExample(char *s1, char *s2){
 
 	fillSemiglobalMatrix(matrix, s1Len, s2Len, s1, s2);
 
-	// printMatrix(matrix, s1Len, s2Len);
-	// printf("\n");
-
 	findSemiglobal(matrix, s1Len, s2Len, s1, s2, &result1, &result2);
 
 	if(s1Len > s2Len){
@@ -67,16 +64,27 @@ int main(){
 	char l3[] = "AATCCCGCGTCGGCGACAACCACCACCATGTCGTCTGCCGCGATCCAGCCGTCGGGATCGGTCGCCC";
 	char l4[] = "TTCGATCGAACCACCACCAAGTCGTCTTAGCTTGAACTTCCAGCCGATTTCTCGCCC";
 
-	printf("Semiglobal 1:\n");
+	printf("Semiglobal 1:\n\n");
+	printf("Original String 1:%s\n", s1);
+	printf("Original String 2:%s\n\n", s2);
 	semiglobalExample(s1, s2);
+	printf("\n");
 
-	printf("Semiglobal 2:\n");
+	printf("Semiglobal 2:\n\n");
+	printf("Original String 1:%s\n", s3);
+	printf("Original String 2:%s\n\n", s4);
 	semiglobalExample(s3, s4);
+	printf("\n");
 
-	printf("Local 1:\n");
+	printf("Local 1:\n\n");
+	printf("Original String 1:%s\n", l1);
+	printf("Original String 2:%s\n\n", l2);
 	localExample(l1, l2);
+	printf("\n");
 
-	printf("Local 2:\n");
+	printf("Local 2:\n\n");
+	printf("Original String 1:%s\n", l3);
+	printf("Original String 2:%s\n\n", l4);
 	localExample(l3, l4);
 	return 0;
 }

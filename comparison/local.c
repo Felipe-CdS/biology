@@ -45,8 +45,6 @@ void findLocals(int** m, int c, int r, ll** results){
 		}
 	}
 
-	// printf("sim: %d\n", highest);
-
 	for(int i = 0; i <= c; i++){
 		for(int j = 0; j <= r; j++){
 			if(m[i][j] == highest)
@@ -71,17 +69,17 @@ void printBacktrack(int** m, int x, int y, char* s1, char* s2){
 
 		if(m[y][x] == (t-2)){
 			r1[idx] = '-';
-			r2[idx] = s2[y];
+			r2[idx] = s2[x];
 			idx++;
 			--x;
 		} else if(m[y][x] == (d-1) || m[y][x] == (d+1)) {
-			r1[idx] = s1[x];
-			r2[idx] = s2[y];
+			r1[idx] = s1[y];
+			r2[idx] = s2[x];
 			idx++;
 			--x;
 			--y;
 		} else if(m[y][x] == (l-2)){
-			r1[idx] = s1[x];
+			r1[idx] = s1[y];
 			r2[idx] = '-';
 			idx++;
 			--y;
